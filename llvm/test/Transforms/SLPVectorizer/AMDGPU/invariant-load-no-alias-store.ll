@@ -6,19 +6,12 @@ define void @test(ptr addrspace(1) %base, ptr addrspace(1) %otherA, ptr addrspac
 ; CHECK-SAME: ptr addrspace(1) [[BASE:%.*]], ptr addrspace(1) [[OTHERA:%.*]], ptr addrspace(1) [[OTHERB:%.*]]) #[[ATTR0:[0-9]+]] {
 ; CHECK-NEXT:  [[ENTRY:.*:]]
 ; CHECK-NEXT:    [[P0:%.*]] = getelementptr half, ptr addrspace(1) [[BASE]], i32 0
-; CHECK-NEXT:    [[P1:%.*]] = getelementptr half, ptr addrspace(1) [[BASE]], i32 1
 ; CHECK-NEXT:    [[A0PTR:%.*]] = getelementptr half, ptr addrspace(1) [[OTHERA]], i32 0
 ; CHECK-NEXT:    [[B0PTR:%.*]] = getelementptr half, ptr addrspace(1) [[OTHERB]], i32 0
-; CHECK-NEXT:    [[A0:%.*]] = load half, ptr addrspace(1) [[A0PTR]], align 2, !invariant.load [[META0:![0-9]+]]
-; CHECK-NEXT:    [[B0:%.*]] = load half, ptr addrspace(1) [[B0PTR]], align 2, !invariant.load [[META0]]
-; CHECK-NEXT:    [[ADD0:%.*]] = fadd reassoc half [[A0]], [[B0]]
-; CHECK-NEXT:    store half [[ADD0]], ptr addrspace(1) [[P0]], align 2
-; CHECK-NEXT:    [[A1PTR:%.*]] = getelementptr half, ptr addrspace(1) [[OTHERA]], i32 1
-; CHECK-NEXT:    [[B1PTR:%.*]] = getelementptr half, ptr addrspace(1) [[OTHERB]], i32 1
-; CHECK-NEXT:    [[A1:%.*]] = load half, ptr addrspace(1) [[A1PTR]], align 2, !invariant.load [[META0]]
-; CHECK-NEXT:    [[B1:%.*]] = load half, ptr addrspace(1) [[B1PTR]], align 2, !invariant.load [[META0]]
-; CHECK-NEXT:    [[ADD1:%.*]] = fadd reassoc half [[A1]], [[B1]]
-; CHECK-NEXT:    store half [[ADD1]], ptr addrspace(1) [[P1]], align 2
+; CHECK-NEXT:    [[TMP0:%.*]] = load <2 x half>, ptr addrspace(1) [[A0PTR]], align 2, !invariant.load [[META0:![0-9]+]]
+; CHECK-NEXT:    [[TMP1:%.*]] = load <2 x half>, ptr addrspace(1) [[B0PTR]], align 2, !invariant.load [[META0]]
+; CHECK-NEXT:    [[TMP2:%.*]] = fadd reassoc <2 x half> [[TMP0]], [[TMP1]]
+; CHECK-NEXT:    store <2 x half> [[TMP2]], ptr addrspace(1) [[P0]], align 2
 ; CHECK-NEXT:    ret void
 ;
 entry:
@@ -43,6 +36,3 @@ entry:
 attributes #0 = { nounwind }
 
 !0 = !{}
-;.
-; CHECK: [[META0]] = !{}
-;.
