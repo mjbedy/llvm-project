@@ -21664,7 +21664,7 @@ void BoUpSLP::BlockScheduling::calculateDependencies(
       //    It's important for the loop break condition (see below) to
       //    check this limit even between two read-only instructions.
       if (DistToSrc >= MaxMemDepDistance ||
-          (!IsInvariantLoad(DestInst) && // Invariant load cannot have memory deps.
+          (!IsInvariantLoad(DestInst) && // Cannot have memory deps.
            (SrcMayWrite || DepDest->getInst()->mayWriteToMemory()) &&
            (IsNonSimpleSrc || NumAliased >= AliasedCheckLimit ||
             SLP->isAliased(SrcLoc, SrcInst, DepDest->getInst())))) {
